@@ -32,6 +32,10 @@ class Cell():
                 return False
         return True
 
+    def piece_color(self):
+        if (self.get_piece() is not None):
+            return self.get_piece().color
+
     def __str__(self):
         if(self.get_piece() is not None):
             return f'{self.get_piece()}'
@@ -41,6 +45,8 @@ class Cell():
 class Board():
     def __init__(self):
         self.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
+        captured_player_black = []
+        captured_player_white = []
 
     def initialize_board(self):
         self.shogi_board[0][4].piece = King(King.BLACK)
@@ -85,9 +91,17 @@ class Board():
         if not piece.captured:
             if (piece.is_my_movement(cell_from, cell_to)):
                 # Check if destination is available for my color
-                if(cell_to.is_available_for_me(piece.color)):
+                if (cell_to.is_available_for_me(piece.color)):
+                    if (cell_to.get_piece() is not None):
+                        piece_captured = cell_to.get_piece()
+                        piece_captured.set_captured()
+                        if (piece_captured.color is 'B'):
+                            self.captured_player_white.append(piece_captured)
+                        else:
+                            self.captured_player_black.append(piece_captured)
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
+
                     print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     self.__str__()
                     return 1
