@@ -7,9 +7,6 @@ AUTHOR: jesus
 DATE: 17/03/2020
 
 """
-
-
-
 class Pieces():
     """This class represents all shogi pieces."""
     BLACK = 'B'
@@ -55,6 +52,11 @@ class Pieces():
     def set_uncaptured(self):
         """Unpromoted a piece"""
         self.promoted = False
+
+    def is_my_movement(self, cell_from, cell_to):
+        pass
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        pass
 
 class King(Pieces):
     def __init__(self, color):
@@ -105,5 +107,15 @@ class Lance(Pieces):
 class Pawn(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "P", color)
-    def move(self):
+
+    def is_my_movement(self, cell_from, cell_to):
+        if self.color is self.BLACK:
+            if ((cell_to.y-cell_from.y == 1) & (cell_to.x-cell_from.x == 0)):
+                return True
+        else:
+            if ((cell_to.y-cell_from.y == -1) & (cell_to.x-cell_from.x == 0)):
+                return True
+        return False
+
+    def is_my_promoted_movement(self):
         pass

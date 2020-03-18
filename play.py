@@ -9,7 +9,7 @@ DATE: 17/03/2020
 """
 import click as click
 
-from models.board import Board
+from app.models.board import Board
 
 
 class Play:

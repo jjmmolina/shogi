@@ -7,7 +7,7 @@ AUTHOR: jesus
 DATE: 17/03/2020
 
 """
-from models.pieces import Pawn, King, Rook, Gold_General, Silver_General, Knight, Lance, Bisop
+from app.models.pieces import Pawn, King, Rook, Gold_General, Silver_General, Knight, Lance, Bisop
 from pandas import *
 
 
@@ -16,22 +16,31 @@ class Cell():
     def __init__(self, x, y, piece=None):
         self.x = x
         self.y = y
-        self.piece = piece #if piece is not None else set()
+        self.piece = piece
 
     def get_piece(self):
         return self.piece
-    def set_piece(self, piece):
-        self.piece = piece
+    def set_piece(self, piece=None):
+        if piece:
+            self.piece = piece
+        else:
+            self.piece = ''
+
+    def is_available_for_me(self, color):
+        if (self.get_piece() is not None):
+            if(self.get_piece().color == color):
+                return False
+        return True
 
     def __str__(self):
         if(self.get_piece() is not None):
-            # return f'Piece {self.get_piece()}, Position{ self.x, self.y}'
             return f'{self.get_piece()}'
         else:
             return f' '
 
 class Board():
-    shogi_board = [[Cell(x,y) for x in range(9)] for y in range(9)]
+
+    shogi_board = [[Cell(x,y)for x in range(0,9)] for y in range(0,9)]
 
     def __init__(self):
         self.shogi_board[0][4].piece = King(King.BLACK)
@@ -67,7 +76,24 @@ class Board():
             self.shogi_board[2][p].piece = Pawn(Pawn.BLACK)
             self.shogi_board[6][p].piece = Pawn(Pawn.WHITE)
 
+
     def __str__(self):
         print(DataFrame(self.shogi_board))
 
+    def move(self, cell_from, cell_to):
+        piece = cell_from.get_piece()
+        if not piece.captured:
+            if (piece.is_my_movement(cell_from, cell_to)):
+                # Check if destination is available for my color
+                if(cell_to.is_available_for_me(piece.color)):
+                    self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
+                    self.shogi_board[cell_from.y][cell_from.x].set_piece()
+                    print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
+                    self.__str__()
+                    return 1
+            else:
+                print(f'Movement not possible for piece {cell_from.piece}')
+                return 0
+        print(f'Movement not possible for piece {cell_from.piece} because it is captured')
+        return 0
 
