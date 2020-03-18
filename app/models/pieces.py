@@ -62,8 +62,10 @@ class King(Pieces):
     def __init__(self, color):
         Pieces.__init__(self,"K", color, False)
 
-    def move(self):
-        pass
+    def is_my_movement(self, cell_from, cell_to):
+        if ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1)):
+            return True
+        return False
 
 class Rook(Pieces):
     def __init__(self,  color):
