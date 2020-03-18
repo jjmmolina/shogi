@@ -16,3 +16,9 @@ You can run the application executing the following command
 python play.py
 ```
 And the application shows the initialize board
+
+## Tests
+
+You can launch the test suite by running the following command:
+
+    python -m unittest
