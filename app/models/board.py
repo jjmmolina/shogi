@@ -39,10 +39,10 @@ class Cell():
             return f' '
 
 class Board():
-
-    shogi_board = [[Cell(x,y)for x in range(0,9)] for y in range(0,9)]
-
     def __init__(self):
+        self.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
+
+    def initialize_board(self):
         self.shogi_board[0][4].piece = King(King.BLACK)
         self.shogi_board[8][4].piece = King(King.WHITE)
 

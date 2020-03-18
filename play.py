@@ -17,6 +17,7 @@ class Play:
     def run(self):
         """This method is used to start the game. """
         board = Board()
+        board.initialize_board()
         tablero = board.__str__()
         print(tablero)
 
