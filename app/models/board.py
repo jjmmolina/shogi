@@ -27,7 +27,7 @@ class Cell():
             self.piece = ''
 
     def is_available_for_me(self, color):
-        if (self.get_piece() is not None):
+        if (self.get_piece() is not None) & (self.get_piece() is not ''):
             if(self.get_piece().color == color):
                 return False
         return True
@@ -92,22 +92,27 @@ class Board():
             if (piece.is_my_movement(cell_from, cell_to)):
                 # Check if destination is available for my color
                 if (cell_to.is_available_for_me(piece.color)):
-                    if (cell_to.get_piece() is not None):
+                    if ((cell_to.get_piece() is not None) & (cell_to.get_piece() is not '')):
                         piece_captured = cell_to.get_piece()
                         piece_captured.set_captured()
                         if (piece_captured.color is 'B'):
                             self.captured_player_white.append(piece_captured)
                         else:
                             self.captured_player_black.append(piece_captured)
+                        print(piece_captured.__string__())
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
 
                     print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     self.__str__()
                     return 1
+                else:
+                    print(f'Movement not possible for piece {cell_from.piece} because destination cell is ocuped by other piece of my colour')
+                    return 0
             else:
                 print(f'Movement not possible for piece {cell_from.piece}')
                 return 0
-        print(f'Movement not possible for piece {cell_from.piece} because it is captured')
+        else:
+            print(f'Movement not possible for piece {cell_from.piece} because it is captured')
         return 0
 

@@ -58,6 +58,24 @@ class Pieces():
     def is_my_promoted_movement(self, cell_from, cell_to):
         pass
 
+    def _gold_general_movement(self, cell_from, cell_to):
+        if (cell_to != cell_from):
+            if (((cell_to.y - cell_from.y) == 0) & (abs(cell_to.x - cell_from.x) == 1)):  # Misma fila
+                return True
+            if (self.color == self.BLACK):
+                if ((cell_to.y - cell_from.y == 1) & (
+                        abs(cell_to.x - cell_from.x) <= 1)):  # Movimiento hacia arriba incluye diagonal
+                    return True
+                if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia abajo
+                    return True
+            elif (self.color == self.WHITE):
+                if (abs(cell_to.y - cell_from.y == 1) & (
+                        abs(cell_to.x - cell_from.x) <= 1)):  # Movimiento hacia abajo incluye diagonal
+                    return True
+                if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia arriba
+                    return True
+        return False
+
 class King(Pieces):
     def __init__(self, color):
         Pieces.__init__(self,"K", color, False)
@@ -85,26 +103,33 @@ class Gold_General(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "G", color, False)
 
-    def move(self):
-        pass
+    def is_my_movement(self, cell_from, cell_to):
+        return(self._gold_general_movement(cell_from, cell_to))
+
+
+
+
 
 class Silver_General(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "S", color)
-    def move(self):
-        pass
+
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        return (self._gold_general_movement(cell_from, cell_to))
 
 class Knight(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "N", color)
-    def move(self):
-        pass
+
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        return (self._gold_general_movement(cell_from, cell_to))
 
 class Lance(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "L", color)
-    def move(self):
-        pass
+
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        return (self._gold_general_movement(cell_from, cell_to))
 
 class Pawn(Pieces):
     def __init__(self, color):
@@ -119,5 +144,5 @@ class Pawn(Pieces):
                 return True
         return False
 
-    def is_my_promoted_movement(self):
-        pass
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        return (self._gold_general_movement(cell_from, cell_to))
