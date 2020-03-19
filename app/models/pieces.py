@@ -89,8 +89,21 @@ class Rook(Pieces):
     def __init__(self,  color):
         Pieces.__init__(self,"R", color)
 
-    def move(self):
-        pass
+    def is_my_movement(self, cell_from, cell_to):
+        if ((((cell_to.y - cell_from.y) == 0) & (abs(cell_to.x - cell_from.x) >= 1))|
+            ((abs(cell_to.y - cell_from.y) > 1) & ((cell_to.x - cell_from.x) == 0))):
+            return True
+        return False
+
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        if (self.is_my_movement(cell_from, cell_to)
+            |
+        #Este movimiento es semejante al del rey
+            ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
+        ):
+            return True
+        return False
+
 
 class Bisop(Pieces):
     def __init__(self, color):
@@ -105,10 +118,6 @@ class Gold_General(Pieces):
 
     def is_my_movement(self, cell_from, cell_to):
         return(self._gold_general_movement(cell_from, cell_to))
-
-
-
-
 
 class Silver_General(Pieces):
     def __init__(self, color):
