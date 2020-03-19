@@ -7,7 +7,7 @@ AUTHOR: jesus
 DATE: 17/03/2020
 
 """
-from app.models.pieces import Pawn, King, Rook, Gold_General, Silver_General, Knight, Lance, Bisop
+from app.models.pieces import Pawn, King, Rook, Gold_General, Silver_General, Knight, Lance, Bishop
 from pandas import *
 
 
@@ -45,8 +45,8 @@ class Cell():
 class Board():
     def __init__(self):
         self.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
-        captured_player_black = []
-        captured_player_white = []
+        self.captured_player_black = []
+        self.captured_player_white = []
 
     def initialize_board(self):
         self.shogi_board[0][4].piece = King(King.BLACK)
@@ -72,8 +72,8 @@ class Board():
         self.shogi_board[8][0].piece = Lance(Lance.WHITE)
         self.shogi_board[8][8].piece = Lance(Lance.WHITE)
 
-        self.shogi_board[1][1].piece = Bisop(Bisop.BLACK)
-        self.shogi_board[7][7].piece = Bisop(Bisop.WHITE)
+        self.shogi_board[1][1].piece = Bishop(Bishop.BLACK)
+        self.shogi_board[7][7].piece = Bishop(Bishop.WHITE)
 
         self.shogi_board[1][7].piece = Rook(Rook.BLACK)
         self.shogi_board[7][1].piece = Rook(Rook.WHITE)
@@ -99,7 +99,7 @@ class Board():
                             self.captured_player_white.append(piece_captured)
                         else:
                             self.captured_player_black.append(piece_captured)
-                        print(piece_captured.__string__())
+                        print(f'Piece {piece_captured.__str__()} captured by piece {piece.__str__()}')
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
 

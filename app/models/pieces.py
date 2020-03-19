@@ -45,7 +45,7 @@ class Pieces():
     def set_captured(self):
         """Captured a piece"""
         self.captured = True
-        self._change_color()
+        # self._change_color()
         if self.promoted:
             self.promoted = False
 
@@ -105,12 +105,26 @@ class Rook(Pieces):
         return False
 
 
-class Bisop(Pieces):
+class Bishop(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "B", color)
 
-    def move(self):
-        pass
+    def is_my_movement(self, cell_from, cell_to):
+        if ((abs(cell_to.y - cell_from.y) >= 1) & (abs(cell_to.x - cell_from.x) >= 1) & (
+                abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x))
+        ):
+            return True
+        return False
+
+    def is_my_promoted_movement(self, cell_from, cell_to):
+        if self.promoted:
+            if (self.is_my_movement(cell_from, cell_to)
+                    |
+                    # Este movimiento es semejante al del rey
+                    ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
+            ):
+                return True
+        return False
 
 class Gold_General(Pieces):
     def __init__(self, color):
