@@ -103,6 +103,7 @@ class Board():
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
                     #TODO comprobar donde está la pieza dependiendo de su color para coronar o no
+                    #TODO comprobar si hay jaque o jaquemate
 
                     print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     # self.__str__()

@@ -173,6 +173,18 @@ class Knight(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "N", color)
 
+    def is_my_movement(self, cell_from, cell_to):
+        if self.promoted:
+            return (self.is_my_promoted_movement(cell_from, cell_to))
+        else:
+            if (self.color == self.BLACK):
+                if ((cell_to.y - cell_from.y) == 2) & (abs(cell_to.x - cell_from.x) == 1):
+                    return True
+            elif (self.color == self.WHITE):
+                if ((cell_to.y - cell_from.y) == -2) & (abs(cell_to.x - cell_from.x) == 1):
+                    return True
+        return False
+
     def is_my_promoted_movement(self, cell_from, cell_to):
         if self.promoted:
             return (self._gold_general_movement(cell_from, cell_to))
