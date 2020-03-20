@@ -69,8 +69,7 @@ class Pieces():
                 if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia abajo
                     return True
             elif (self.color == self.WHITE):
-                if (abs(cell_to.y - cell_from.y == 1) & (
-                        abs(cell_to.x - cell_from.x) <= 1)):  # Movimiento hacia abajo incluye diagonal
+                if (abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) <= 1):  # Movimiento hacia abajo incluye diagonal
                     return True
                 if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia arriba
                     return True
@@ -96,12 +95,13 @@ class Rook(Pieces):
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
-        if (self.is_my_movement(cell_from, cell_to)
-            |
-        #Este movimiento es semejante al del rey
-            ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
-        ):
-            return True
+        if self.promoted:
+            if (self.is_my_movement(cell_from, cell_to)
+                |
+            #Este movimiento es semejante al del rey
+                ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
+            ):
+                return True
         return False
 
 
@@ -138,21 +138,36 @@ class Silver_General(Pieces):
         Pieces.__init__(self, "S", color)
 
     def is_my_promoted_movement(self, cell_from, cell_to):
-        return (self._gold_general_movement(cell_from, cell_to))
+        if self.promoted:
+            return (self._gold_general_movement(cell_from, cell_to))
+        return False
 
 class Knight(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "N", color)
 
     def is_my_promoted_movement(self, cell_from, cell_to):
-        return (self._gold_general_movement(cell_from, cell_to))
+        if self.promoted:
+            return (self._gold_general_movement(cell_from, cell_to))
+        return False
 
 class Lance(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "L", color)
 
+    def is_my_movement(self, cell_from, cell_to):
+        if(self.color == self.BLACK):
+            if ( ( (cell_to.y - cell_from.y) >= 1) & ((cell_to.x - cell_from.x) == 0)):
+                return True
+        else:
+            if (((cell_from.y - cell_to.y) >= 1) & ((cell_to.x - cell_from.x) == 0)): # Los lanceros no pueden ir hacia atras
+                return True
+        return False
+
     def is_my_promoted_movement(self, cell_from, cell_to):
-        return (self._gold_general_movement(cell_from, cell_to))
+        if self.promoted:
+            return (self._gold_general_movement(cell_from, cell_to))
+        return False
 
 class Pawn(Pieces):
     def __init__(self, color):
@@ -168,4 +183,6 @@ class Pawn(Pieces):
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
-        return (self._gold_general_movement(cell_from, cell_to))
+        if self.promoted:
+            return (self._gold_general_movement(cell_from, cell_to))
+        return False

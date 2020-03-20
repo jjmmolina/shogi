@@ -102,6 +102,7 @@ class Board():
                         print(f'Piece {piece_captured.__str__()} captured by piece {piece.__str__()}')
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
+                    #TODO comprobar donde está la pieza dependiendo de su color para coronar o no
 
                     print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     self.__str__()

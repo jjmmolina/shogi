@@ -10,7 +10,7 @@ DATE: 18/03/2020
 import unittest
 
 from app.models.board import Cell, Board
-from app.models.pieces import Rook, Bishop
+from app.models.pieces import Rook, Bishop, Lance
 
 
 class PiecesTest():
@@ -184,6 +184,74 @@ class BishopTestCase(unittest.TestCase, PiecesTest):
         self.assertEqual(0, self.board.move(self.board.shogi_board[7][7], self.board.shogi_board[6][7]))
         self.assertEqual(0, self.board.move(self.board.shogi_board[7][7], self.board.shogi_board[8][7]))
         self.assertEqual(0, self.board.move(self.board.shogi_board[7][7], self.board.shogi_board[7][8]))
+
+    def tearDown(self):
+        self.board.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
+
+class LanceTestCase(unittest.TestCase, PiecesTest):
+    board = Board()
+    def setUp(self):
+        self.board.shogi_board[0][0].piece = Lance(Lance.BLACK)
+        self.board.shogi_board[0][8].piece = Lance(Lance.BLACK)
+        self.board.shogi_board[8][0].piece = Lance(Lance.WHITE)
+        self.board.shogi_board[8][8].piece = Lance(Lance.WHITE)
+
+    def test_move_possible_initial_board(self):
+        # Black Lance
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][0], self.board.shogi_board[2][0]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[2][0], self.board.shogi_board[7][0]))
+        self.assertEqual(0, self.board.move(self.board.shogi_board[7][0], self.board.shogi_board[0][0]))
+
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][8], self.board.shogi_board[1][8]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[1][8], self.board.shogi_board[3][8]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[3][8], self.board.shogi_board[7][8]))
+
+        # White Lance
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][0], self.board.shogi_board[7][0]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[7][0], self.board.shogi_board[2][0]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[2][0], self.board.shogi_board[1][0]))
+
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][8], self.board.shogi_board[5][8]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[5][8], self.board.shogi_board[2][8]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[2][8], self.board.shogi_board[1][8]))
+
+
+    def test_promoted_move_possible_initial_board(self):
+        self.board.shogi_board[0][0].piece.set_promoted()
+        self.board.shogi_board[0][8].piece.set_promoted()
+        self.board.shogi_board[8][0].piece.set_promoted()
+        self.board.shogi_board[8][8].piece.set_promoted()
+
+        # Black Lance
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][0], self.board.shogi_board[2][0]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[2][0], self.board.shogi_board[2][1]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[2][1], self.board.shogi_board[1][1]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[1][1], self.board.shogi_board[0][1]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][1], self.board.shogi_board[0][0]))
+
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][8], self.board.shogi_board[4][8]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[4][8], self.board.shogi_board[5][7]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[5][7], self.board.shogi_board[4][7]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[4][7], self.board.shogi_board[5][8]))
+
+
+        # White Bishop
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][0], self.board.shogi_board[8][1]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][1], self.board.shogi_board[8][2]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][2], self.board.shogi_board[0][2]))
+
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][8], self.board.shogi_board[7][7]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[7][7], self.board.shogi_board[6][6]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[6][6], self.board.shogi_board[5][5]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[5][5], self.board.shogi_board[4][4]))
+
+    def test_move_not_possible(self):
+        self.assertEqual(0, self.board.move(self.board.shogi_board[0][0], self.board.shogi_board[5][8]))
+        self.assertEqual(0, self.board.move(self.board.shogi_board[0][8], self.board.shogi_board[4][4]))
+        self.assertEqual(0, self.board.move(self.board.shogi_board[8][0], self.board.shogi_board[7][1]))
+        self.assertEqual(1, self.board.move(self.board.shogi_board[8][8], self.board.shogi_board[5][8]))
+        self.assertEqual(0, self.board.move(self.board.shogi_board[5][8], self.board.shogi_board[8][8]))
+
 
     def tearDown(self):
         self.board.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
