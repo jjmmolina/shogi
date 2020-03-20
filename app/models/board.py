@@ -42,6 +42,10 @@ class Cell():
         else:
             return f' '
 
+
+
+
+
 class Board():
     def __init__(self):
         self.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
@@ -86,6 +90,12 @@ class Board():
     def __str__(self):
         print(DataFrame(self.shogi_board))
 
+    def _check_mate(color):
+        pass
+
+    def _check(color):
+        pass
+
     def move(self, cell_from, cell_to):
         piece = cell_from.get_piece()
         if not piece.captured:
@@ -100,12 +110,19 @@ class Board():
                         else:
                             self.captured_player_black.append(piece_captured)
                         print(f'Piece {piece_captured.__str__()} captured by piece {piece.__str__()}')
+                    print(f'Moving piece {piece.name} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
+                    if not piece.promoted:
+                        if(((piece.color is 'W') &(cell_to.y <= 2)) | ((piece.color is 'B') & (cell_to.y >= 6))):
+                                piece.set_promoted()
+                                print(f'Piece {cell_from.piece.name} has been promoted!!')
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
-                    #TODO comprobar donde está la pieza dependiendo de su color para coronar o no
                     #TODO comprobar si hay jaque o jaquemate
+                    if(self._check(piece.color)):
+                        print(f'Check by piece {piece.__str__()}')
+                    if(self._check_mate()):
+                        print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
 
-                    print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     # self.__str__()
                     return 1
                 else:

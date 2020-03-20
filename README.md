@@ -9,6 +9,11 @@ To install the dependencies execute the following command in a virtual python en
 
     pip install -r requirements
 
+## Functionalities implemented
+- Piece's movement
+- Promoted pieces movement
+- A piece can be promoted during the match
+
 ## Usage
 You can run the application executing the following command
 
