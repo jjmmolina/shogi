@@ -89,7 +89,7 @@ class Board():
     def move(self, cell_from, cell_to):
         piece = cell_from.get_piece()
         if not piece.captured:
-            if (piece.is_my_movement(cell_from, cell_to) | piece.is_my_promoted_movement(cell_from, cell_to)):
+            if piece.is_my_movement(cell_from, cell_to):
                 # Check if destination is available for my color
                 if (cell_to.is_available_for_me(piece.color)):
                     if ((cell_to.get_piece() is not None) & (cell_to.get_piece() is not '')):
@@ -105,7 +105,7 @@ class Board():
                     #TODO comprobar donde está la pieza dependiendo de su color para coronar o no
 
                     print(f'Movement piece {cell_from.piece} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
-                    self.__str__()
+                    # self.__str__()
                     return 1
                 else:
                     print(f'Movement not possible for piece {cell_from.piece} because destination cell is ocuped by other piece of my colour')

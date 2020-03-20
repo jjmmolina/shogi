@@ -69,7 +69,7 @@ class Pieces():
                 if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia abajo
                     return True
             elif (self.color == self.WHITE):
-                if (abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) <= 1):  # Movimiento hacia abajo incluye diagonal
+                if ((cell_to.y - cell_from.y) == -1) & ((cell_to.x - cell_from.x) <= 1):  # Movimiento hacia abajo incluye diagonal
                     return True
                 if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 0)):  # movimiento hacia arriba
                     return True
@@ -89,14 +89,18 @@ class Rook(Pieces):
         Pieces.__init__(self,"R", color)
 
     def is_my_movement(self, cell_from, cell_to):
-        if ((((cell_to.y - cell_from.y) == 0) & (abs(cell_to.x - cell_from.x) >= 1))|
-            ((abs(cell_to.y - cell_from.y) > 1) & ((cell_to.x - cell_from.x) == 0))):
-            return True
+        if self.promoted:
+            return(self.is_my_promoted_movement(cell_from, cell_to))
+        else:
+            if ((((cell_to.y - cell_from.y) == 0) & (abs(cell_to.x - cell_from.x) >= 1))|
+                ((abs(cell_to.y - cell_from.y) > 1) & ((cell_to.x - cell_from.x) == 0))):
+                return True
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
         if self.promoted:
-            if (self.is_my_movement(cell_from, cell_to)
+            if ( (((cell_to.y - cell_from.y) == 0) & (abs(cell_to.x - cell_from.x) >= 1))|
+                ((abs(cell_to.y - cell_from.y) > 1) & ((cell_to.x - cell_from.x) == 0)) # Mismo movimiento que sin coronar
                 |
             #Este movimiento es semejante al del rey
                 ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
@@ -110,15 +114,20 @@ class Bishop(Pieces):
         Pieces.__init__(self, "B", color)
 
     def is_my_movement(self, cell_from, cell_to):
-        if ((abs(cell_to.y - cell_from.y) >= 1) & (abs(cell_to.x - cell_from.x) >= 1) & (
-                abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x))
-        ):
-            return True
+        if self.promoted:
+            return(self.is_my_promoted_movement(cell_from, cell_to))
+        else:
+            if ((abs(cell_to.y - cell_from.y) >= 1) & (abs(cell_to.x - cell_from.x) >= 1) & (
+                    abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x))
+            ):
+                return True
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
         if self.promoted:
-            if (self.is_my_movement(cell_from, cell_to)
+            if (
+                    (abs(cell_to.y - cell_from.y) >= 1) & (abs(cell_to.x - cell_from.x) >= 1) & (
+                    abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x)) #Mismo movimiento que sin coronar
                     |
                     # Este movimiento es semejante al del rey
                     ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
@@ -136,6 +145,24 @@ class Gold_General(Pieces):
 class Silver_General(Pieces):
     def __init__(self, color):
         Pieces.__init__(self, "S", color)
+
+    def is_my_movement(self, cell_from, cell_to):
+        if self.promoted:
+           return(self.is_my_promoted_movement(cell_from, cell_to))
+        else:
+            if (self.color == self.BLACK):
+                if ((cell_to.y - cell_from.y == 1) & (abs(cell_to.x - cell_from.x) <= 1)):  # Movimiento hacia arriba incluye diagonal
+                    return True
+                if((abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) == 1) & (
+                        abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x))
+                  ):  # movimiento hacia atrás excepto la vertical
+                    return True
+            elif (self.color == self.WHITE):
+                if (abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) <= 1):  # Movimiento hacia abajo incluye diagonal
+                    return True
+                if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 1)):  # movimiento hacia arriba
+                    return True
+        return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
         if self.promoted:
@@ -156,12 +183,15 @@ class Lance(Pieces):
         Pieces.__init__(self, "L", color)
 
     def is_my_movement(self, cell_from, cell_to):
-        if(self.color == self.BLACK):
-            if ( ( (cell_to.y - cell_from.y) >= 1) & ((cell_to.x - cell_from.x) == 0)):
-                return True
+        if self.promoted:
+            return(self.is_my_promoted_movement(cell_from, cell_to))
         else:
-            if (((cell_from.y - cell_to.y) >= 1) & ((cell_to.x - cell_from.x) == 0)): # Los lanceros no pueden ir hacia atras
-                return True
+            if(self.color == self.BLACK):
+                if ( ( (cell_to.y - cell_from.y) >= 1) & ((cell_to.x - cell_from.x) == 0)):
+                    return True
+            else:
+                if (((cell_from.y - cell_to.y) >= 1) & ((cell_to.x - cell_from.x) == 0)): # Los lanceros no pueden ir hacia atras
+                    return True
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
@@ -174,12 +204,15 @@ class Pawn(Pieces):
         Pieces.__init__(self, "P", color)
 
     def is_my_movement(self, cell_from, cell_to):
-        if self.color is self.BLACK:
-            if ((cell_to.y-cell_from.y == 1) & (cell_to.x-cell_from.x == 0)):
-                return True
+        if self.promoted:
+            return(self.is_my_promoted_movement(cell_from, cell_to))
         else:
-            if ((cell_to.y-cell_from.y == -1) & (cell_to.x-cell_from.x == 0)):
-                return True
+            if self.color is self.BLACK:
+                if ((cell_to.y-cell_from.y == 1) & (cell_to.x-cell_from.x == 0)):
+                    return True
+            else:
+                if ((cell_to.y-cell_from.y == -1) & (cell_to.x-cell_from.x == 0)):
+                    return True
         return False
 
     def is_my_promoted_movement(self, cell_from, cell_to):
