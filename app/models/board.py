@@ -90,10 +90,10 @@ class Board():
     def __str__(self):
         print(DataFrame(self.shogi_board))
 
-    def _check_mate(color):
+    def _check_mate(self,color):
         pass
 
-    def _check(color):
+    def _check(self,color):
         pass
 
     def move(self, cell_from, cell_to):
@@ -120,7 +120,7 @@ class Board():
                     #TODO comprobar si hay jaque o jaquemate
                     if(self._check(piece.color)):
                         print(f'Check by piece {piece.__str__()}')
-                    if(self._check_mate()):
+                    if(self._check_mate(piece.color)):
                         print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
 
                     # self.__str__()
