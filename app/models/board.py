@@ -45,7 +45,6 @@ class Cell():
 
 
 
-
 class Board():
     def __init__(self):
         self.shogi_board = [[Cell(x, y) for x in range(0, 9)] for y in range(0, 9)]
@@ -90,10 +89,36 @@ class Board():
     def __str__(self):
         print(DataFrame(self.shogi_board))
 
+    def _get_king_white(self):
+        for rows in self.shogi_board:
+            for element in rows:
+                if ((element.get_piece() is not None) & (element.get_piece() is not '')):
+                    if ((element.piece.name == 'K') & (element.piece.color == 'W')):
+                        return element
+
+    def _get_king_black(self):
+        for rows in self.shogi_board:
+            for element in rows:
+                if ((element.get_piece() is not None) & (element.get_piece() is not '')):
+                    if ((element.piece.name == 'K') & (element.piece.color == 'B')):
+                        return element
+
     def _check_mate(self,color):
         pass
 
     def _check(self,color):
+        if color is 'B':
+            cell_k = self._get_king_white()
+        else:
+            cell_k = self._get_king_black()
+
+        for cells in self.shogi_board:
+           for element in cells:
+               if ((element.get_piece() is not None) & (element.get_piece() is not '')):
+                    if(element.get_piece().color == color):
+                        piece = element.get_piece()
+                        return(piece.is_my_movement(element, cell_k))
+
         pass
 
     def move(self, cell_from, cell_to):
@@ -103,6 +128,11 @@ class Board():
                 # Check if destination is available for my color
                 if (cell_to.is_available_for_me(piece.color)):
                     if ((cell_to.get_piece() is not None) & (cell_to.get_piece() is not '')):
+                        # TODO comprobar si hay jaquemate
+                        if (self._check(piece.color)):
+                            print(f'Check by piece {piece.__str__()}')
+                        if (self._check_mate(piece.color)):
+                            print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
                         piece_captured = cell_to.get_piece()
                         piece_captured.set_captured()
                         if (piece_captured.color is 'B'):
@@ -110,6 +140,8 @@ class Board():
                         else:
                             self.captured_player_black.append(piece_captured)
                         print(f'Piece {piece_captured.__str__()} captured by piece {piece.__str__()}')
+                        if (piece_captured.name == 'K'):
+                            print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
                     print(f'Moving piece {piece.name} from {cell_from.y, cell_from.x} to {cell_to.y, cell_to.x}')
                     if not piece.promoted:
                         if(((piece.color is 'W') &(cell_to.y <= 2)) | ((piece.color is 'B') & (cell_to.y >= 6))):
@@ -117,11 +149,7 @@ class Board():
                                 print(f'Piece {cell_from.piece.name} has been promoted!!')
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
-                    #TODO comprobar si hay jaque o jaquemate
-                    if(self._check(piece.color)):
-                        print(f'Check by piece {piece.__str__()}')
-                    if(self._check_mate(piece.color)):
-                        print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
+
 
                     # self.__str__()
                     return 1

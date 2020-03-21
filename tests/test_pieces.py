@@ -11,6 +11,16 @@ import unittest
 
 from app.models.board import Cell, Board
 from app.models.pieces import Rook, Bishop, Lance, Silver_General, Knight, King, Pawn, Gold_General
+class CheckMateTestCase(unittest.TestCase):
+    board = Board()
+    board.shogi_board[0][4].piece = King(King.BLACK)
+    board.shogi_board[0][5].piece = King(King.WHITE)
+
+    def test_check(self):
+        self.assertEqual(1, self.board.move(self.board.shogi_board[0][4], self.board.shogi_board[0][5]))
+
+    def test_check_mate(self):
+        pass
 
 class PawnTestCase(unittest.TestCase):
     board = Board()
