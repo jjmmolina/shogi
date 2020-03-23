@@ -131,34 +131,32 @@ class Board():
             cell_k = self._get_king_black()
 
         cells_around_king = self._get_cells_around_king(cell_k.y, cell_k.x)
-        check_mate = False
-        mov_enemy=False
         # Can the king move to other cell?
         adding_mov_enemy = 0
         adding_mov_friend = 0
         adding_mov_king = 0
         for adjacent in cells_around_king:
-            # Si el rey se puede mover a esa celda adyacente
+            # King can go to the adjacent cell (Si el rey se puede mover a esa celda adyacente)
             if (cell_k.get_piece().is_my_movement(cell_k, adjacent)):
                 adding_mov_king+=1
-                # Pero alguna pieza enemiga puede llegar a esa celda adyacente
+                # Also any enemy can move to this adjacent cell(Pero alguna pieza enemiga puede llegar a esa celda adyacente)
                 for cells in self.shogi_board:
                     for element in cells:
                         if ((element.get_piece() is not None) & (element.get_piece() is not '')):
-                            # Cojo las piezas del equipo que está atacando
+                            # Attacker pieces
                             if (element.get_piece().color == cell_from.get_piece().color):
                                 piece_attacker_team = element.get_piece()
-                                #Si algún enemigo se puede mover a esa celda adyacente
-                                if piece_attacker_team.is_my_movement(element, adjacent):  # Si el enemigo se puede mover a la celda
+                                #Can any enemy move to this cell? (Si algún enemigo se puede mover a esa celda adyacente)
+                                if piece_attacker_team.is_my_movement(element, adjacent):
                                     adding_mov_enemy += 1
-                                    mov_enemy = True
-                            # Cojo las piezas del equipo que está defendiendo
+
+                            # Attacked team
                             if ((element.get_piece().color != cell_from.get_piece().color) &(element.get_piece().name is not 'K')):
                                 piece_my_team = element.get_piece()
-                                # Si algún amigo se puede mover a esa celda adyacente
+                                # Can any friend move? (Si algún amigo se puede mover a esa celda adyacente)
                                 if piece_my_team.is_my_movement(element, adjacent):
                                     adding_mov_friend += 1
-                                    mov_friend = True
+
 
         if (adding_mov_king == 0):
             return True
@@ -226,6 +224,7 @@ class Board():
 
 
     def re_introduce_piece(self, piece, cell):
+        piece._change_color()
         if isinstance(piece, Pawn) | isinstance(piece, Lance):
             if (piece.color == 'B') & (cell.y == 8):
                 return 0
