@@ -224,3 +224,30 @@ class Board():
             print(f'Movement not possible for piece {cell_from.piece} because it is captured')
         return 0
 
+
+    def re_introduce_piece(self, piece, cell):
+        if isinstance(piece, Pawn) | isinstance(piece, Lance):
+            if (piece.color == 'B') & (cell.y == 8):
+                return 0
+            if (piece.color == 'W') & (cell.y == 0):
+                return 0
+        if isinstance(piece, Knight) & (piece.color == 'B') & (cell.y >= 7):
+            return 0
+        if isinstance(piece, Knight) & (piece.color == 'W') & (cell.y <= 1):
+            return 0
+        if isinstance(piece, Pawn):
+            my_column = self.column(self.shogi_board, cell.x)
+            for elements in my_column:
+                if ((elements.get_piece() is not None) & (elements.get_piece() != '')):
+                    if ((isinstance(elements.get_piece(), Pawn)) & (elements.get_piece().color == piece.color) & (elements.get_piece().promoted is False)):
+                        return 0
+        if ((self.shogi_board[cell.y][cell.x].piece is None) | (self.shogi_board[cell.y][cell.x].piece == '')):
+            self.shogi_board[cell.y][cell.x].set_piece(piece)
+        if (isinstance(piece, Pawn) & self._check_mate(self.shogi_board[cell.y][cell.x])):
+            self.shogi_board[cell.y][cell.x] = ''
+            return 0
+        return 1
+
+
+    def column(self,matrix, i):
+        return [row[i] for row in matrix]
