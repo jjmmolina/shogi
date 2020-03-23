@@ -7,6 +7,8 @@ AUTHOR: jesus
 DATE: 17/03/2020
 
 """
+
+
 class Pieces():
     """This class represents all shogi pieces."""
     BLACK = 'B'
@@ -83,6 +85,7 @@ class King(Pieces):
         if ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1)):
             return True
         return False
+
 
 class Rook(Pieces):
     def __init__(self,  color):
@@ -202,7 +205,7 @@ class Lance(Pieces):
                 if ( ( (cell_to.y - cell_from.y) >= 1) & ((cell_to.x - cell_from.x) == 0)):
                     return True
             else:
-                if (((cell_from.y - cell_to.y) >= 1) & ((cell_to.x - cell_from.x) == 0)): # Los lanceros no pueden ir hacia atras
+                if (((cell_from.y - cell_to.y) >= 1) & ((cell_to.x - cell_from.x) == 0)):
                     return True
         return False
 

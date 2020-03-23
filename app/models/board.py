@@ -101,25 +101,89 @@ class Board():
             for element in rows:
                 if ((element.get_piece() is not None) & (element.get_piece() is not '')):
                     if ((element.piece.name == 'K') & (element.piece.color == 'B')):
-                        return element
+                       return element
 
-    def _check_mate(self,color):
-        pass
+    def _get_cells_around_king(self, y, x):
+        matrix = self.shogi_board
+        result = []
+        if y > 0:
+            result.append(matrix[y - 1][x])
+            if x > 0:
+                result.append(matrix[y - 1][x - 1])
+            if x < 8:
+                result.append(matrix[y - 1][x + 1])
+        if x < 8:
+            result.append(matrix[y][x + 1])
+        if x > 0:
+            result.append(matrix[y][x - 1])
+        if y < 8:
+            result.append(matrix[y + 1][x])
+            if x > 0:
+                result.append(matrix[y + 1][x - 1])
+            if x < 8:
+                result.append(matrix[y + 1][x + 1])
+        return result
+
+    def _check_mate(self, cell_from):
+        if cell_from.get_piece().color is 'B':
+            cell_k = self._get_king_white()
+        else:
+            cell_k = self._get_king_black()
+
+        cells_around_king = self._get_cells_around_king(cell_k.y, cell_k.x)
+        check_mate = False
+        mov_enemy=False
+        # Can the king move to other cell?
+        adding_mov_enemy = 0
+        adding_mov_friend = 0
+        adding_mov_king = 0
+        for adjacent in cells_around_king:
+            # Si el rey se puede mover a esa celda adyacente
+            if (cell_k.get_piece().is_my_movement(cell_k, adjacent)):
+                adding_mov_king+=1
+                # Pero alguna pieza enemiga puede llegar a esa celda adyacente
+                for cells in self.shogi_board:
+                    for element in cells:
+                        if ((element.get_piece() is not None) & (element.get_piece() is not '')):
+                            # Cojo las piezas del equipo que está atacando
+                            if (element.get_piece().color == cell_from.get_piece().color):
+                                piece_attacker_team = element.get_piece()
+                                #Si algún enemigo se puede mover a esa celda adyacente
+                                if piece_attacker_team.is_my_movement(element, adjacent):  # Si el enemigo se puede mover a la celda
+                                    adding_mov_enemy += 1
+                                    mov_enemy = True
+                            # Cojo las piezas del equipo que está defendiendo
+                            if ((element.get_piece().color != cell_from.get_piece().color) &(element.get_piece().name is not 'K')):
+                                piece_my_team = element.get_piece()
+                                # Si algún amigo se puede mover a esa celda adyacente
+                                if piece_my_team.is_my_movement(element, adjacent):
+                                    adding_mov_friend += 1
+                                    mov_friend = True
+
+        if (adding_mov_king == 0):
+            return True
+        else:
+            if ((adding_mov_enemy>adding_mov_friend) & (adding_mov_enemy>=adding_mov_king)):
+                return True
+            elif (adding_mov_enemy<=adding_mov_friend):
+                return False
+        return False
+
 
     def _check(self,color):
         if color is 'B':
             cell_k = self._get_king_white()
         else:
             cell_k = self._get_king_black()
-
         for cells in self.shogi_board:
            for element in cells:
                if ((element.get_piece() is not None) & (element.get_piece() is not '')):
                     if(element.get_piece().color == color):
                         piece = element.get_piece()
-                        return(piece.is_my_movement(element, cell_k))
-
-        pass
+                        check = piece.is_my_movement(element, cell_k)
+                        if check:
+                            return True
+        return False
 
     def move(self, cell_from, cell_to):
         piece = cell_from.get_piece()
@@ -128,10 +192,9 @@ class Board():
                 # Check if destination is available for my color
                 if (cell_to.is_available_for_me(piece.color)):
                     if ((cell_to.get_piece() is not None) & (cell_to.get_piece() is not '')):
-                        # TODO comprobar si hay jaquemate
                         if (self._check(piece.color)):
                             print(f'Check by piece {piece.__str__()}')
-                        if (self._check_mate(piece.color)):
+                        if (self._check_mate(cell_from)):
                             print(f'Checkmate by piece {piece.__str__()}. Team {piece.color} WIN!!!!')
                         piece_captured = cell_to.get_piece()
                         piece_captured.set_captured()
@@ -149,8 +212,6 @@ class Board():
                                 print(f'Piece {cell_from.piece.name} has been promoted!!')
                     self.shogi_board[cell_to.y][cell_to.x].set_piece(piece)
                     self.shogi_board[cell_from.y][cell_from.x].set_piece()
-
-
                     # self.__str__()
                     return 1
                 else:
