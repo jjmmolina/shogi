@@ -1,5 +1,5 @@
 # Shogi
-Shogi repository for Eventbrite "homework" during the coronavirus quarantine. It is not a version to play, but you 
+Shogi repository for a selection process in an international company during the coronavirus quarantine. It is not a version to play, but you 
 can run a lot of tests that show the functionalities implemented. 
 This document includes a brief summary about how to install the code, a list of functionalities implemented, a how to use
 the application, tests include and, finally, a TODO list for the future.
