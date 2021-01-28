@@ -130,7 +130,7 @@ class Bishop(Pieces):
         if self.promoted:
             if (
                     (abs(cell_to.y - cell_from.y) >= 1) & (abs(cell_to.x - cell_from.x) >= 1) & (
-                    abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x)) #Mismo movimiento que sin coronar
+                    abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x)) # Mismo movimiento que sin coronar
                     |
                     # Este movimiento es semejante al del rey
                     ((abs(cell_to.y - cell_from.y) <= 1) & (abs(cell_to.x - cell_from.x) <= 1))
@@ -158,12 +158,12 @@ class Silver_General(Pieces):
                     return True
                 if((abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) == 1) & (
                         abs(cell_to.y - cell_from.y) == abs(cell_to.x - cell_from.x))
-                  ):  # movimiento hacia atrás excepto la vertical
+                  ):  # Movimiento hacia atrás excepto la vertical
                     return True
             elif (self.color == self.WHITE):
                 if (abs(cell_to.y - cell_from.y) == 1) & (abs(cell_to.x - cell_from.x) <= 1):  # Movimiento hacia abajo incluye diagonal
                     return True
-                if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 1)):  # movimiento hacia arriba
+                if ((abs(cell_to.y - cell_from.y) == 1) & ((cell_to.x - cell_from.x) == 1)):  # Movimiento hacia arriba
                     return True
         return False
 

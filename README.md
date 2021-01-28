@@ -49,6 +49,12 @@ You can launch the test suite by running the following command:
     python -m unittest
  
  ## TO-DO list
+ Technical improvements:
+ - Use pytest library for unit testing. Since pytest allows you to manage a fixture file with all data to inject in tests, this allows you to manage better and in a more clear way what you need to test.
+ - Mockup some functionalities to speed tests (using monkeypatch for example)
+ - Translate code comments to English 
+ 
+ Functional improvements:
  - Create a match in which you and a partner can move the pieces to play a real game.
  - User Interface.
  - Initialize the game with famous matchs
